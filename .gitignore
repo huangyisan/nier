@@ -1,0 +1,4 @@
+/nier/nier/settings_db.py
+/nier/nier/settings_email.py
+/nier/nier/settings_ecs.py
+*.pyc

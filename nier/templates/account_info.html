@@ -1,0 +1,94 @@
+{% extends "layout/base.html" %}
+{% load staticfiles %}
+
+
+{% block container %}
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>个人信息</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li class="">
+                        <a href="#" role="button"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu"></ul>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+
+                  <div class="x_content">
+                    <form class="form-horizontal form-label-left" novalidate>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Name</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="name" class="form-control col-md-7 col-xs-12"  name="name" required="required" type="text" value="{{ request.user.username }}" disabled>
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="email" id="email" name="email" class="form-control col-md-7 col-xs-12" value="{{ request.user.email }}" disabled>
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">Role</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="role" name="role" required="required" class="form-control col-md-7 col-xs-12" value="{{ request.user.userinfo.get_role }}" disabled>
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="group">Group</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="group" name="group" required="required" class="form-control col-md-7 col-xs-12" disabled>
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="createtime">Create Time</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="datetime" id="createtime" name="createtime" required="required" class="form-control col-md-7 col-xs-12" value='{{ request.user.userinfo.createtime|date:"Y-m-d" }}' disabled>
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="logintime">Login Time</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="datetime" id="logintime" name="logintime" required="required" class="form-control col-md-7 col-xs-12" value='{{ request.user.userinfo.logintime|date:"Y-m-d" }}' disabled>
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="status">Status</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="status" name="status" required="required" class="form-control col-md-7 col-xs-12" value="{{ request.user.userinfo.get_status }}" disabled>
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="message">Message</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <textarea id="message" required="required" name="message" class="form-control col-md-7 col-xs-12"></textarea>
+                        </div>
+                      </div>
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                          <button type="submit" class="btn btn-primary">Cancel</button>
+                          <button id="send" type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+{% endblock %}
+
+    {% block js %}
+    <script src="{% static 'css/vendors/validator/validator.js' %}"></script>
+    {% endblock %}

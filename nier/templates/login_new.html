@@ -1,0 +1,226 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Gentelella Alela! | </title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{% static 'css/nprogress.css' %}" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="{% static 'css/custom.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sweetalert.css' %}"/>
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'css/customer.css' %}"/>-->
+
+    <!--js-->
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/sweetalert.js' %}"></script>
+
+  </head>
+
+  <body class="login">
+    <div>
+      <a class="hiddenanchor" id="signup"></a>
+      <a class="hiddenanchor" id="signin"></a>
+
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form id="form_login" role="form" method="post">
+              {% csrf_token %}
+              <h1>Login</h1>
+              <div>
+                <input type="text" class="form-control" name="username" placeholder="Username" required="" />
+              </div>
+              <div>
+                <input type="password" class="form-control" name="password" placeholder="Password" required="" />
+              </div>
+              <div>
+                <button type="button" class="btn btn-success btn-sm" id="btn_login">Log in</button>
+                <a class="reset_pass" href="#">Lost your password?</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">New to site?
+                  <a href="#signup" class="to_register"> Create Account </a>
+                </p>
+
+                <div class="clearfix"></div>
+                <br />
+
+                <div>
+                  <h1><i class="fa fa-paw"></i> CMDB</h1>
+                  <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <div id="register" class="animate form registration_form">
+          <section class="login_content">
+            <form id="form_register" role="form" method="post">
+              {% csrf_token %}
+              <h1>Create Account</h1>
+              <div>
+                <input type="text" class="form-control" name="username" placeholder="Username" required="" />
+              </div>
+              <div>
+                <input type="email" class="form-control" name="email" placeholder="Email" required="" />
+              </div>
+              <div>
+                <input type="password" class="form-control" name="password" placeholder="Password" required="" />
+              </div>
+              <div>
+                <input type="password" class="form-control" name="password2" placeholder="ConfirmPassword" required="" />
+              </div>
+              <p>
+              <div>
+				<button type="button" class="btn btn-success btn-sm" id="btn_register">Create Account</button>
+                <!--<a class="btn btn-default submit" id="btn_register">Submit</a>-->
+              </div>
+              </p>
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">Already a member ?
+                  <a href="#signin" class="to_register"> Log in </a>
+                </p>
+
+                <div class="clearfix"></div>
+                <br />
+
+                <div>
+                  <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                  <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+
+  	<script type="text/javascript">
+        // register func
+		jQuery(document).ready(
+		    function () {
+				jQuery("#btn_register").on("click",function () {
+					var values = jQuery("#form_register").serializeArray();
+					jQuery.ajax({
+						type:"POST",
+						url:"{% url 'account:register' %}",
+						data:values,
+						success: function (data) {
+						    // console.log(data);
+						    var errors= [];
+                            jQuery.each(data['errors'],function (key, value) {
+                                errors.push(value[0]['message']+'\n');
+                            });
+						    if (data['status'] == 200) {
+                                swal({
+                                  title: "Success",
+                                  text: "请登陆邮箱进行认证",
+                                  type: "success",
+                                  confirmButtonClass: "btn-success",
+                                  confirmButtonText: "OK",
+                                  closeOnConfirm: true
+                                },
+                                function() {
+                                    jQuery(location).attr('href', '#signin');
+//                                    jQuery("#form_register input").val('');
+                                    //清空表单
+                                    jQuery("#form_register")[0].reset();
+                                });
+							}
+							else {
+                                swal({
+                                  title: "Faild",
+                                  text: errors.join(''),
+                                  type: "error",
+                                  confirmButtonClass: "btn-danger",
+                                  confirmButtonText: "OK",
+                                  closeOnConfirm: true
+                                });
+							}
+
+                        }
+					})
+                })
+            }
+		);
+
+
+        // login func
+        jQuery(document).ready(
+            function () {
+                jQuery("#btn_login").on("click", function () {
+                    var values = jQuery("#form_login").serializeArray();
+                    jQuery.ajax({
+                        type:"POST",
+                        url:"{% url 'account:login' %}",
+                        data:values,
+                        success: function (data) {
+                            // console.log(data);
+                            var errors=[];
+                            jQuery.each(data['errors'],function (key, value) {
+                                console.log(value[0]['message']);
+                                  errors.push(value[0]['message']+'\n')
+                            });
+                            if (data['status'] == 200) {
+								window.location.replace("/index.html")
+                            }
+
+                            else if (data['status'] == 201) {
+                                //not active
+                                window.location.replace("/userinfo.html")
+							}
+
+                            else if (data['status'] == 403) {
+                                swal({
+                                  title: "Faild",
+                                  text: errors.join(''),
+                                  type: "error",
+                                  confirmButtonClass: "btn-danger",
+                                  confirmButtonText: "OK",
+                                  closeOnConfirm: true
+                                });
+                            }
+
+                            else {
+                                swal({
+                                  title: "Faild",
+                                  text: errors.join(''),
+                                  type: "error",
+                                  confirmButtonClass: "btn-danger",
+                                  confirmButtonText: "OK",
+                                  closeOnConfirm: true
+                                })
+                            }
+
+                        }
+                    })
+                })
+
+            }
+        );
+
+	</script>
+
+  </body>
+</html>

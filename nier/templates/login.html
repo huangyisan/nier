@@ -1,0 +1,199 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CMDB</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sweetalert.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/customer.css' %}"/>
+      <!--样式控制-->
+    <link href="{% static 'css/signin.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/sweetalert.js' %}"></script>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin" role="form" name="loginForm" method="post" id="form_login" >
+        {% csrf_token %}
+        <h2 class="form-signin-heading">cmdb</h2>
+        <label for="userName" class="sr-only">Username</label>
+          <input type="username" id="inputUsername" class="form-control" name="username" placeholder="Username" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+        <div align="right" style="margin-bottom: 10px">
+          <a href="#" data-toggle="modal" data-target="#dialog_register" data-backdrop="static">no account?</a>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" id="btn_login" type="button">Sign in</button>
+      </form>
+
+    </div> <!-- /container -->
+
+  <div class="modal fade" id="dialog_register">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4>Create Account</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form" method="post" name="registerForm" id="form_register">
+					{% csrf_token %}
+					<div class="form-group">
+						<label for="userName" class="col-xs-4 control-label">Username</label>
+						<div class="col-xs-6">
+							<input type="text" class="form-control" name="username" id="userName" placeholder="用户名" value="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="passWord" class="col-xs-4 control-label">Password</label>
+						<div class="col-xs-6">
+							<input type="password" class="form-control" name="password" id="password" placeholder="密码" value="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="password2" class="col-xs-4 control-label">Confirm Password</label>
+						<div class="col-xs-6">
+							<input type="password" class="form-control" name="password2" id="password2" placeholder="确认密码" value="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="email" class="col-xs-4 control-label">Email</label>
+						<div class="col-xs-6">
+							<input type="email" class="form-control" name="email" id="email" placeholder="邮箱" value="">
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<div class="col-xs-offset-4 col-xs-10">
+							<button type="button" class="btn btn-primary" id="btn_register">Create Account</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+	<script type="text/javascript">
+        // active func
+		jQuery(document).ready(
+		    function () {
+				jQuery("#btn_register").on("click",function () {
+					var values = jQuery("#form_register").serializeArray();
+					jQuery("#dialog_register").addClass("dialog-backdrop");
+					jQuery.ajax({
+						type:"POST",
+						url:"{% url 'account:register' %}",
+						data:values,
+						success: function (data) {
+						    // console.log(data);
+						    var errors= [];
+                            jQuery.each(data['errors'],function (key, value) {
+                                errors.push(value[0]['message']+'\n');
+                            });
+						    if (data['status'] == 200) {
+                                swal({
+                                  title: "Success",
+                                  text: "请登陆邮箱进行认证",
+                                  type: "success",
+                                  confirmButtonClass: "btn-success",
+                                  confirmButtonText: "OK",
+                                  closeOnConfirm: true
+                                },
+                                function(){
+                                        jQuery("#dialog_register").removeClass("dialog-backdrop").modal('hide');
+                                });
+							}
+							else {
+                                swal({
+                                  title: "Faild",
+                                  text: errors.join(''),
+                                  type: "error",
+                                  confirmButtonClass: "btn-danger",
+                                  confirmButtonText: "OK",
+                                  closeOnConfirm: true
+                                },
+                                function(){
+                                jQuery("#dialog_register").removeClass("dialog-backdrop");
+                                });
+							}
+
+                        }
+					})
+                })
+            }
+		);
+
+
+        // login func
+        jQuery(document).ready(
+            function () {
+                jQuery("#btn_login").on("click", function () {
+                    var values = jQuery("#form_login").serializeArray();
+                    jQuery.ajax({
+                        type:"POST",
+                        url:"{% url 'account:login' %}",
+                        data:values,
+                        success: function (data) {
+                            // console.log(data);
+                            var errors=[];
+                            jQuery.each(data['errors'],function (key, value) {
+                                console.log(value[0]['message']);
+                                  errors.push(value[0]['message']+'\n')
+                            });
+                            if (data['status'] == 200) {
+								window.location.replace("/index.html")
+                            }
+
+                            else if (data['status'] == 201) {
+                                //not active
+                                window.location.replace("/userinfo.html")
+							}
+
+                            else if (data['status'] == 403) {
+                                swal({
+                                  title: "Faild",
+                                  text: errors.join(''),
+                                  type: "error",
+                                  confirmButtonClass: "btn-danger",
+                                  confirmButtonText: "OK",
+                                  closeOnConfirm: true
+                                });
+                            }
+
+                            else {
+                                swal({
+                                  title: "Faild",
+                                  text: errors.join(''),
+                                  type: "error",
+                                  confirmButtonClass: "btn-danger",
+                                  confirmButtonText: "OK",
+                                  closeOnConfirm: true,
+                                })
+                            }
+
+                        }
+                    })
+                })
+
+            }
+        );
+
+	</script>
+
+  </body>
+</html>

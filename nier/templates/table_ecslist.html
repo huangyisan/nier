@@ -1,0 +1,307 @@
+{% extends "layout/base.html" %}
+{% load staticfiles %}
+
+
+    {% block title %}CMDB | Userlist{% endblock %}
+
+    <!-- Datatables -->
+    {% block css %}
+    <link href="{% static 'css/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css' %}" rel="stylesheet">
+
+    <!--Pnotify-->
+    <link href="{% static 'css/vendors/pnotify/dist/pnotify.css' %}" rel="stylesheet">
+    <link href="{% static 'css/vendors/pnotify/dist/pnotify.buttons.css' %}" rel="stylesheet">
+    <link href="{% static 'css/vendors/pnotify/dist/pnotify.nonblock.css' %}" rel="stylesheet">
+    {% endblock %}
+
+      {% block container %}
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Users <small>Some examples to get you started</small></h3>
+              </div>
+
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+              <div class="clearfix"></div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Button Example <small>Users</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">已添加资产</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">未添加资产</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">已删除资产</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                    <p class="text-muted font-13 m-b-30">
+                      The Buttons extension for DataTables provides a common set of options, API methods and styling to display buttons on a page that will interact with a DataTable. The core library provides the based framework upon which plug-ins can built.
+                    </p>
+                    <table id="datatable-list" class="table table-striped table-bordered">
+                        <!--<div class="dt-buttons btn-group">-->
+                            <!--&lt;!&ndash;<a class="btn btn-default buttons-copy buttons-html5 btn-sm" tabindex="0" href="http://127.0.0.1:8000/ecs.html"><span>刷新</span></a>&ndash;&gt;-->
+                        <!--</div>-->
+                      <thead>
+                        <tr>
+                          <th>类型</th>
+                          <th>名称</th>
+                          <th>ip</th>
+                          <th>镜像</th>
+                          <th>硬件</th>
+                          <th>区域</th>
+                          <th>状态</th>
+                          <th>过期时间</th>
+                          <th>录入方式</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody id="datatable-buttons-body">
+                        {% for object in object_list %}
+                          {% if object.asset.show_status is 1 %}
+                        <tr>
+                          <td>{{ object.asset.get_asset_type_display }}</td>
+                          <td>{{ object.asset.name }} <br>
+                              {{ object.asset.instance_id }}</td>
+                          <td>{{ object.in_ipaddr }} <br>
+                              {{ object.ou_ipaddr }}</td>
+                          <td>{{ object.os_info }}</td>
+                          <td>{{ object.cpu_info }} <br>
+                              {{ object.memory_info }}</td>
+                          <td>{{ object.asset.get_region_display }}</td>
+                          <td>{{ object.asset.get_status_display }}</td>
+                          <td>{{ object.asset.expire_day|date:"o-m-j"}}</td>
+                          <td>{{ object.get_created_by_display}}</td>
+                         <td><button type="button" class="btn btn-default btn-success btn-xs list-onemodify" value="{{ object.asset.instance_id }}">修改</button><br>
+                                <button type="button" class="btn btn-default btn-danger btn-xs list-onedelete" value="{{ object.asset.instance_id }}">删除</button></td>
+                        </tr>
+                          {% endif %}
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+                    <p class="text-muted font-13 m-b-30">
+                      The Buttons extension for DataTables provides a common set of options, API methods and styling to display buttons on a page that will interact with a DataTable. The core library provides the based framework upon which plug-ins can built.
+                    </p>
+                    <table id="datatable-add" class="table table-striped table-bordered bulk_action">
+                      <thead>
+                        <tr>
+                          <th>
+                            <div class="btn-group  btn-group-xs">
+                              <button class="btn btn-default" id="selectAll" onclick="selectAll()" type="button">全选</button>
+                              <button class="btn btn-default" id="revAll" onclick="revAll()" type="button">取消</button>
+                            </div>
+                          </th>
+                          <th>类型</th>
+                          <th>名称</th>
+                          <th>ip</th>
+                          <th>镜像</th>
+                          <th>硬件</th>
+                          <th>区域</th>
+                          <th>状态</th>
+                          <th>过期时间</th>
+                          <th>录入方式</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        {% for object in object_list %}
+                          {% if object.asset.show_status is 0 %}
+
+                        <tr>
+                          <td><input type="checkbox" name="selectbody" value="{{ object.asset.instance_id }}"></td>
+                          <td>{{ object.asset.get_asset_type_display }}</td>
+                          <td>{{ object.asset.name }} <br>
+                              {{ object.asset.instance_id }}</td>
+                          <td>{{ object.in_ipaddr }} <br>
+                              {{ object.ou_ipaddr }}</td>
+                          <td>{{ object.os_info }}</td>
+                          <td>{{ object.cpu_info }} <br>
+                              {{ object.memory_info }}</td>
+                          <td>{{ object.asset.get_region_display }}</td>
+                          <td>{{ object.asset.get_status_display }}</td>
+                          <td>{{ object.asset.expire_day|date:"o-m-j"}}</td>
+                          <td>{{ object.get_created_by_display}}</td>
+                         <td><button type="button" class="btn btn-default btn-success btn-xs add-oneadd" value="{{ object.asset.instance_id }}">添加</button><br>
+                                <button type="button" class="btn btn-default btn-danger btn-xs add-onedelete" value="{{ object.asset.instance_id }}">删除</button></td>
+                        </tr>
+                           {% endif %}
+                         {% endfor %}
+
+                      </tbody>
+                        <tfoot>
+                        <td colspan="11">
+                            <button type="button" class="btn btn-round btn-success source" id="add" onclick="new PNotify({
+                              title: 'Regular Success',
+                              text: 'That thing that you were trying to do worked!',
+                              type: 'success',
+                              styling: 'bootstrap3'
+                              });">批量添加</button>
+                            <button type="button" class="btn btn-round btn-danger source" id="del" onclick="new PNotify({
+                              title: 'Regular Success',
+                              text: 'That thing that you were trying to do worked!',
+                              type: 'danger',
+                              styling: 'bootstrap3'
+                              });">批量删除</button>
+                        </td>
+                        </tfoot>
+                    </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+                          <p>xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
+                            booth letterpress, commodo enim craft beer mlkshk </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+      {% endblock %}
+
+      {% block js_script %}
+          <script type="text/javascript">
+            jQuery(document).ready(function(){
+                //移除pnotify demon
+                PNotify.prototype.options.styling = "bootstrap3";
+                jQuery('.ui-pnotify').remove();
+
+                // initial datatable
+                var datatable_list = $('#datatable-list').DataTable({
+                    "dom": "<'row'<'col-sm-2'l><'col-sm-1'B><'col-sm-9'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    buttons: [
+                      {
+                        extend: "csv",
+                        className: "btn-sm"
+                      }
+                    ]
+                });
+
+                var datatable_add = $('#datatable-add').DataTable({
+                    "dom": 'flrtip',
+                    "columnDefs": [
+                        {"orderable": false, "targets": 0},
+                        {"orderable": false, "targets": 10}
+                    ]
+                });
+
+                //add one list
+
+                $('#datatable-add tbody').on('click', '.add-oneadd', function () {
+                    var btn_this = $(this);
+                    var btn_value = $(this).val();
+                    var data_row = datatable_add.row(btn_this.parents('tr'));
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "{% url 'assets:addasset' %}",
+                        data: {'instance_id':btn_value, "csrfmiddlewaretoken":'{{ csrf_token }}'},
+                        success: function (data) {
+                            var rowData = data_row.data();
+                            if (data['status'] == 200) {
+                                rowData[rowData.length - 1] = '<td><button type="button" class="btn btn-default btn-success btn-xs list-onemodify" value=' + btn_value +'>修改</button><br>' +
+                                '<button type="button" class="btn btn-default btn-danger btn-xs list-onedelete" value=' + btn_value + '>删除</button></td>';
+                                rowData.shift();
+
+                                datatable_add
+                                  .row(btn_this.parents('tr'))
+                                  .remove()
+                                  .draw();
+
+                                datatable_list
+                                  .row.add( rowData )
+                                  .draw();
+
+                                jQuery(function(){
+                                  new PNotify({
+                                      title: 'Success!',
+                                      text: btn_value + ' 已添加到资产列表',
+                                      type: 'success',
+                                      styling: 'bootstrap3',
+                                      nonblock: {
+                                        nonblock: true
+                                      }
+                                  });
+                                });
+                                }
+                        }
+                    });
+                });
+            });
+
+            function selectAll() {
+                    jQuery("input[name='selectbody']").prop("checked", true);
+            }
+            function revAll() {
+                jQuery("input[name='selectbody']").prop("checked", false);
+            }
+
+            //单条添加
+
+          </script>
+      {% endblock %}
+
+
+    {% block js %}
+    <!-- Datatables -->
+    <script src="{% static 'css/vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js' %}"></script>
+    <script src="{% static 'css/vendors/datatables.net-scroller/js/dataTables.scroller.min.js' %}"></script>
+    <script src="{% static 'css/vendors/jszip/dist/jszip.min.js' %}"></script>
+    <script src="{% static 'css/vendors/pdfmake/build/pdfmake.min.js' %}"></script>
+    <script src="{% static 'css/vendors/pdfmake/build/vfs_fonts.js' %}"></script>
+
+    {% endblock %}
